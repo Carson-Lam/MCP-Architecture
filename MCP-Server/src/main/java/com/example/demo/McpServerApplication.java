@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Bean;
 public class McpServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(McpServerApplication.class, args);
+
+		WeatherService ws = new WeatherService();
+		System.out.println(ws.getWeatherForecastByLocation(33.7490, -84.3880));
 	}
 
 	@Bean

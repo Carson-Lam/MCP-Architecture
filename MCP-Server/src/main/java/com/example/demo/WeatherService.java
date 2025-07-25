@@ -1,16 +1,16 @@
+//java -jar target/MCPServer-0.0.1-SNAPSHOT.jar
 package com.example.demo;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.ai.tool.annotation.Tool;
-import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Service
 public class WeatherService {
@@ -36,9 +36,10 @@ public class WeatherService {
 
     public record Forecast(@JsonProperty("properties") Props properties){
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public record Props(@JsonProperty("forecast") List<Period> periods) {
+        public record Props(@JsonProperty("periods") List<Period> periods) {
         }
 
+        @JsonIgnoreProperties(ignoreUnknown = true)
         public record Period(@JsonProperty("number") Integer number, @JsonProperty("name") String name,
 				@JsonProperty("startTime") String startTime, @JsonProperty("endTime") String endTime,
 				@JsonProperty("isDaytime") Boolean isDayTime, @JsonProperty("temperature") Integer temperature,
@@ -67,9 +68,8 @@ public class WeatherService {
         .retrieve()
         .body(Points.class);
 
-
     var forecast = restClient.get()
-        .uri(points.properties().forecast)
+        .uri(points.properties().forecast())
         .retrieve()
         .body(Forecast.class);
 
@@ -81,7 +81,7 @@ public class WeatherService {
         Forecast: %s
         """, p.name(), p.temperature(), p.temperatureUnit(), p.windSpeed(), p.windDirection(),
         p.detailedForecast());
-    }).collect(Collectors.joining());
+    }).collect(Collectors.joining("\n"));
     return forecastTest;
   }
 }
