@@ -17,26 +17,13 @@ public class StockApplication {
 	//Boilerplate, runs main app
 	public static void main(String[] args) {
 		SpringApplication.run(StockApplication.class, args);
+		StockService ss = new StockService();
+		
 	}
 
 	@Bean
-	public List<ToolCallback> myTools(StockService stockService) {
-		System.err.println("DEBUG: Registered tools");
-		List<ToolCallback> callbacks = List.of(ToolCallbacks.from(stockService));
-		System.err.println("DEBUG: Tool count: " + callbacks.size()); //Show amount of tools retrieved
-		return callbacks;
+	public ToolCallbackProvider stockTools(StockService stockService) {
+		return  MethodToolCallbackProvider.builder().toolObjects(stockService).build();
 	}
 
-	//Debug command line runner
-	// @Bean
-	// public CommandLineRunner testTools(CourseService courseService) {
-	// 	return args -> {
-	// 		System.out.println("Testing tools...");
-	// 		System.out.println("Courses: " + courseService.getCourses());
-	// 		System.out.println("Single course: " + courseService.getCourse("Tool annotation"));
-	// 	};
-	// }
-
-	// MANUALLY TEST JAR: java -jar target/demo-0.0.1-SNAPSHOT.jar
-	
 }
