@@ -14,7 +14,6 @@ public class StockApplication {
 		SpringApplication.run(StockApplication.class, args);
 		StockService ss = new StockService();
 		System.out.println(ss.getStocks());
-		
 	}
 
 	@Bean
