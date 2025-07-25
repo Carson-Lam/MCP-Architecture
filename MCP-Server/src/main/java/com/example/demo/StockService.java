@@ -8,10 +8,18 @@ import jakarta.annotation.PostConstruct;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class StockService{
+
+    //Stock class
+    public record Stock(
+        String code, 
+        String url
+    ){}
+
     //LogFactory interface, list interface
     private static final Logger LOG = LoggerFactory.getLogger(StockService.class);
     private List<Stock> stocks = new ArrayList<>();   
@@ -24,25 +32,23 @@ public class StockService{
     } 
 
     //Tool for getting a single course
-    @Tool(name = "CN_get_stock", description = "get a single Chinese stock quote by company name")
-    public Stock getStock(String name){
+    @Tool(name = "CN_get_stock", description = "get a single Chinese stock quote by stock code")
+    public Optional<Stock> getStock(String name){
         // System.err.println("DEBUG: getCourse() method called with title: " + title);
         return stocks.stream()
-            .filter(stock -> stock.title().equals(name))
-            .findFirst()
-            .orElse(null);
+            .filter(stock -> stock.code().equals(name))
+            .findFirst();
     }
-
 
     @PostConstruct //Tags constructor to run after all beans initialized
     public void init() {
         // System.err.println("DEBUG: CourseService initialized with courses");
         stocks.addAll(List.of(
-            new Stock("工商银行", "https://quote.eastmoney.com/sh601398.html"),
-            new Stock("农业银行", "https://quote.eastmoney.com/sh601288.html"),
-            new Stock("建设银行", "https://quote.eastmoney.com/sh601939.html"),
-            new Stock("中国移动", "https://quote.eastmoney.com/sh600941.html"),
-            new Stock("中国银行", "https://quote.eastmoney.com/sh601988.html")
+            new Stock("601398", "https://quote.eastmoney.com/sh601398.html"),
+            new Stock("601288", "https://quote.eastmoney.com/sh601288.html"),
+            new Stock("601939", "https://quote.eastmoney.com/sh601939.html"),
+            new Stock("600941", "https://quote.eastmoney.com/sh600941.html"),
+            new Stock("601988", "https://quote.eastmoney.com/sh601988.html")
         ));
     }
 }
