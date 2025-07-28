@@ -8,20 +8,22 @@
 		<version>3.5.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
-	<url />
 
+	<groupId>com.example</groupId>
+
+	<artifactId>MCPServer</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<name>MCPServer</name>
+	<description>Demo Spring Boot application for MCP server using STDIO</description>
+
+	<url />
 	<licenses>
 		<license />
 	</licenses>
 	<developers>
 		<developer />
 	</developers>
-
 	<scm>
 		<connection />
 		<developerConnection />
