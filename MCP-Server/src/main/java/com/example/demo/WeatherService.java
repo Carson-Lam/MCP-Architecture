@@ -73,15 +73,28 @@ public class WeatherService {
         .retrieve()
         .body(Forecast.class);
 
-    String forecastTest = forecast.properties().periods().stream().map(p -> { //Stream processing
+    String periodsJson = forecast.properties().periods().stream().map(p -> { //Stream processing
         return String.format("""
-        %s:
-        Temperature: %s %s
-        Wind: %s %s
-        Forecast: %s
-        """, p.name(), p.temperature(), p.temperatureUnit(), p.windSpeed(), p.windDirection(),
-        p.detailedForecast());
-    }).collect(Collectors.joining("\n"));
-    return forecastTest;
-  }
+            {
+                "period": "%s",
+                "temperature": %s,
+                "temperatureUnit": "%s",
+                "windSpeed": "%s",
+                "windDirection": "%s",
+                "detailedForecast": "%s"
+            }""", 
+            p.name(), p.temperature(), p.temperatureUnit(), p.windSpeed(), p.windDirection(), p.detailedForecast().replace("\"", "\\\""));
+    }).collect(Collectors.joining(",\n"));
+
+    return String.format("""
+        {
+            "jsonrpc": "2.0",
+            "result": {
+                "periods": [
+                    %s
+                ]
+            },
+            "id": 1
+        }""", periodsJson);
+    }
 }

@@ -1,0 +1,29 @@
+spring:
+  main:
+    web-application-type: none
+  ai:
+    deepseek:
+      api-key: ${DEEPSEEK_API_KEY}
+    mcp:
+      client:
+        stdio:
+          root-change-notification: true
+          connections:
+            server1:
+              command: java 
+              args:
+                - -jar
+                - C:\\Users\\lliu8\\Documents\\Carson - Coding projects\\MCP\\MCP-Server\\target\\MCPServer-0.0.1-SNAPSHOT.jar  
+                - --port=8080
+                - --mode=production
+              env:
+                API_KEY: ${DEEPSEEK_API_KEY}
+                DEBUG: "true"
+    User:
+      input: "What tools do you have available?"  
+
+logging:
+  level:
+    org.springframework.ai.deepseek: DEBUG
+    org.springframework.boot.context.config: DEBUG
+    root: INFO
