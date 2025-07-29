@@ -2,8 +2,12 @@ spring:
   main:
     web-application-type: none
   ai:
-    deepseek:
-      api-key: ${DEEPSEEK_API_KEY}
+    openai:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/
+      api-key: ${QWEN_API_KEY}
+      chat:
+        options:
+          model: qwen-plus
     mcp:
       client:
         stdio:
@@ -17,13 +21,14 @@ spring:
                 - --port=8080
                 - --mode=production
               env:
-                API_KEY: ${DEEPSEEK_API_KEY}
+                API_KEY: ${QWEN_API_KEY} 
                 DEBUG: "true"
-    User:
-      input: "What tools do you have available?"  
+ai:
+  user:
+    input: "What tools do you have available?"  
 
 logging:
   level:
     org.springframework.ai.deepseek: DEBUG
-    org.springframework.boot.context.config: DEBUG
+    org.springframework.core.env: TRACE
     root: INFO
