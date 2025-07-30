@@ -16,7 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-BIG BALLER NO JOHNNY DANG
+BEN BALLER NO JOHNNY DANG
 
 @SpringBootApplication
 public class Application {
@@ -24,6 +24,9 @@ public class Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
+
+
+
 
 	@Value("${ai.user.input}")
 	private String userInput;
