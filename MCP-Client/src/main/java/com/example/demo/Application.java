@@ -9,14 +9,15 @@ package com.example.demo;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.tool.ToolCallbackProvider;
+
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
-
-BEN BALLER NO JOHNNY DANG
 
 @SpringBootApplication
 public class Application {
@@ -25,31 +26,43 @@ public class Application {
 		SpringApplication.run(Application.class, args);
 	}
 
-
-
-
-	@Value("${ai.user.input}")
-	private String userInput;
-
 	@Bean
-	public CommandLineRunner testQuestion(ChatClient.Builder chatClientBuilder, ToolCallbackProvider tools,
+	public CommandLineRunner chatConversation(ChatClient.Builder chatClientBuilder, ToolCallbackProvider tools,
 			ConfigurableApplicationContext context) {
 
 		return args -> {
-			try {
-				var chatClient = chatClientBuilder
-						.defaultToolCallbacks(tools)
-						.build();
+			var chatClient = chatClientBuilder
+					.defaultToolCallbacks(tools)
+					.build();
 
-				System.out.println("\n>>> QUESTION: " + userInput);
-				String response = chatClient.prompt(userInput).call().content();
-				System.out.println("\n>>> ASSISTANT: " + response);
-			} catch (Exception e) {
-				System.err.println("Error communicating with AI service: " + e.getMessage());
-				e.printStackTrace();
-			} finally {
-				context.close();
+			java.util.Scanner scanner = new java.util.Scanner(System.in);
+			java.util.ArrayList<String> conversation = new java.util.ArrayList<>();
+			conversation.add("system: You are a helpful assistant.");
+
+			System.out.println("\nType your message and press Enter. Type 'exit' to quit.\n");
+			while (true) {
+				System.out.print(">>> USER: ");
+				String userInput = scanner.nextLine();
+				if (userInput == null || userInput.trim().equalsIgnoreCase("exit")) {
+					break;
+				}
+				conversation.add("user: " + userInput);
+				try {
+					StringBuilder promptBuilder = new StringBuilder();
+					for (String msg : conversation) {
+						promptBuilder.append(msg).append("\n");
+					}
+					String promptString = promptBuilder.toString();
+					String response = chatClient.prompt(promptString).call().content();
+					System.out.println("\n>>> ASSISTANT: " + response + "\n");
+					conversation.add("assistant: " + response);
+				} catch (Exception e) {
+					System.err.println("Error communicating with AI service: " + e.getMessage());
+					e.printStackTrace();
+				}
 			}
+			scanner.close();
+			context.close();
 		};
 	}
 }
