@@ -30,14 +30,6 @@ public class StockService{
         return stocks;
     } 
 
-    //Tool for getting a single course
-    @Tool(name = "CN_get_stock", description = "get a single Chinese stock quote by stock code")
-    public Optional<Stock> getStock(String name){
-        return stocks.stream()
-            .filter(stock -> stock.code().equals(name))
-            .findFirst();
-    }
-
     @PostConstruct //Tags constructor to run after all beans initialized
     public void init() {
         stocks.addAll(List.of(

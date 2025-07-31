@@ -7,17 +7,18 @@ curl -X POST "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
 */
 package com.example.demo;
 
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.tool.ToolCallbackProvider;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+
+import io.modelcontextprotocol.client.McpSyncClient;
 
 @SpringBootApplication
 public class Application {
@@ -27,33 +28,38 @@ public class Application {
 	}
 
 	@Bean
-	public CommandLineRunner chatConversation(ChatClient.Builder chatClientBuilder, ToolCallbackProvider tools,
-			ConfigurableApplicationContext context) {
+	public CommandLineRunner chatBot(ChatClient.Builder chatClientBuilder, List<McpSyncClient> mcpSyncClients) {
 
 		return args -> {
+			
+			// Build chat client
 			var chatClient = chatClientBuilder
-					.defaultToolCallbacks(tools)
+                    .defaultSystem("You are useful assistant with several tools available, including weather and stock data.")
+                    .defaultToolCallbacks(new SyncMcpToolCallbackProvider(mcpSyncClients))
 					.build();
 
+			// Setup conversation history
 			java.util.Scanner scanner = new java.util.Scanner(System.in);
 			java.util.ArrayList<String> conversation = new java.util.ArrayList<>();
-			conversation.add("system: You are a helpful assistant.");
-
 			System.out.println("\nType your message and press Enter. Type 'exit' to quit.\n");
+
 			while (true) {
+				// Prompt user for input
 				System.out.print(">>> USER: ");
 				String userInput = scanner.nextLine();
+				
+				// Exit condition
 				if (userInput == null || userInput.trim().equalsIgnoreCase("exit")) {
-					break;
+					System.exit(0);
 				}
+
+				// Add user input to conversation history
 				conversation.add("user: " + userInput);
+
+				// Build the prompt from conversation history
 				try {
-					StringBuilder promptBuilder = new StringBuilder();
-					for (String msg : conversation) {
-						promptBuilder.append(msg).append("\n");
-					}
-					String promptString = promptBuilder.toString();
-					String response = chatClient.prompt(promptString).call().content();
+					String prompt = String.join("\n", conversation);
+					String response = chatClient.prompt(prompt).call().content();
 					System.out.println("\n>>> ASSISTANT: " + response + "\n");
 					conversation.add("assistant: " + response);
 				} catch (Exception e) {
@@ -61,8 +67,6 @@ public class Application {
 					e.printStackTrace();
 				}
 			}
-			scanner.close();
-			context.close();
 		};
 	}
 }

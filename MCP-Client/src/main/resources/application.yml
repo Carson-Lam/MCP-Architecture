@@ -10,11 +10,14 @@ spring:
           model: qwen-plus
     mcp:
       client:
+        enabled: true
+        name: qwen-mcp-client
+        version: 1.0.0
         stdio:
           root-change-notification: true
           connections:
             server1:
-              command: java 
+              command: java
               args:
                 - -jar
                 - C:\\Users\\lliu8\\Documents\\Carson - Coding projects\\MCP\\MCP-Server\\target\\MCPServer-0.0.1-SNAPSHOT.jar  
@@ -23,9 +26,8 @@ spring:
               env:
                 API_KEY: ${QWEN_API_KEY} 
                 DEBUG: "true"
-ai:
-  user:
-    input: "What tools do you have available?"  
+        toolcallback:
+          enabled: true
 
 logging:
   level:
