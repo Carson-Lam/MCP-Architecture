@@ -1,5 +1,6 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.project.explorer.showNonJavaResources": true,
-    "maven.view": "flat"
+    "maven.view": "flat",
+    "java.format.settings.url": "eclipse-formatter.xml"
 }
