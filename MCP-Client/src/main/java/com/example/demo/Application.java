@@ -38,6 +38,11 @@ public class Application {
                     .defaultToolCallbacks(new SyncMcpToolCallbackProvider(mcpSyncClients))
 					.build();
 
+			// Print available tools
+			System.out.println("\n=============== Available Tools =================");
+			System.out.println(chatClient.prompt("List your available MCP tools").call().content());
+			System.out.println("========================================\n");
+			
 			// Setup conversation history
 			java.util.Scanner scanner = new java.util.Scanner(System.in);
 			java.util.ArrayList<String> conversation = new java.util.ArrayList<>();
