@@ -12,7 +12,7 @@
 	<groupId>com.example</groupId>
 
 	<artifactId>MCPServer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 
 	<name>MCPServer</name>
 	<description>Demo Spring Boot application for MCP server using STDIO</description>

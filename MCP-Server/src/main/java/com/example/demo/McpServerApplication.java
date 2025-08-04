@@ -11,17 +11,10 @@ import org.springframework.context.annotation.Bean;
 public class McpServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(McpServerApplication.class, args);
-
-		// Test services
-		// WeatherService ws = new WeatherService();
-		// System.out.println(ws.getWeatherForecastByLocation(33.7490, -84.3880));
-		
-		// StockService ss = new StockService();
-		// System.out.println(ss.getStocks());
 	}
 
 	@Bean
-	public ToolCallbackProvider weatherTools(WeatherService weatherService, StockService stockService) {
-		return MethodToolCallbackProvider.builder().toolObjects(weatherService, stockService).build();
+	public ToolCallbackProvider weatherTools(WeatherService weatherService, CNStockService stockService, StockQuoteService stockQuoteService) {
+		return MethodToolCallbackProvider.builder().toolObjects(weatherService, stockService, stockQuoteService).build();
 	}
 }

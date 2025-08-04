@@ -10,15 +10,12 @@
     import org.springframework.ai.tool.annotation.Tool;
     import org.springframework.stereotype.Service;
     import org.springframework.web.client.RestClient;
-    import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
 
 
     @Service
     public class WeatherService {
 
         private static final String BASE_URL = "https://api.weather.gov";
-        private static final Logger logger = LoggerFactory.getLogger(WeatherService.class);
 
         private final RestClient restClient;
 
@@ -66,21 +63,16 @@
         double latitude,   // Latitude coordinate
         double longitude   // Longitude coordinate
     ) {
-        logger.info("WeatherService.getWeatherForecastByLocation called with lat={}, lon={}", latitude, longitude);
         try {
-            logger.info("Requesting /points/{},{} from weather.gov", latitude, longitude);
             var points = restClient.get()
                 .uri("/points/{latitude},{longitude}", latitude, longitude)
                 .retrieve()
                 .body(Points.class);
-            logger.info("Received points: {}", points);
 
-            logger.info("Requesting forecast from: {}", points.properties().forecast());
             var forecast = restClient.get()
                 .uri(points.properties().forecast())
                 .retrieve()
                 .body(Forecast.class);
-            logger.info("Received forecast: {}", forecast);
 
             String periodsJson = forecast.properties().periods().stream().map(p -> {
                 return String.format("""
@@ -105,10 +97,8 @@
                     },
                     "id": 1
                 }""", periodsJson);
-            logger.info("Returning result from WeatherService");
             return result;
         } catch (Exception e) {
-            logger.error("Exception in getWeatherForecastByLocation", e);
             throw e;
         }
     }
